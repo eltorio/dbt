@@ -29,6 +29,10 @@ RUN . $HOME/.cargo/env && python3.10 -m pip install "git+https://github.com/dbt-
 RUN . $HOME/.cargo/env && python3.10 -m pip install "git+https://github.com/dbt-labs/dbt-bigquery@v${DBT_VERSION}#egg=dbt-bigquery" --no-cache-dir
 RUN . $HOME/.cargo/env && python3.10 -m pip install "git+https://github.com/dbt-labs/dbt-snowflake@v${DBT_VERSION}#egg=dbt-snowflake" --no-cache-dir
 RUN . $HOME/.cargo/env && python3.10 -m pip install markupsafe==2.0.1 pytz
+
+FROM python:3.10-bookworm as final
+COPY --from=base /usr/local/lib/python3.10 /usr/local/lib/python3.10
+COPY --from=base /usr/local/bin/dbt /usr/local/bin/dbt
 WORKDIR /usr/app/dbt/
 ENTRYPOINT ["dbt"]
 # ENTRYPOINT ["/bin/bash"]
