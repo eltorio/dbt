@@ -1,5 +1,5 @@
 FROM python:3.10-bookworm as base
-ARG DBT_VERSION=1.0.0
+ARG DBT_VERSION=1.7.4
 ARG NODE_MAJOR="20"
 RUN apt-get update  \
       && apt-get dist-upgrade -y  \
@@ -23,12 +23,11 @@ RUN cd /tmp/dbt-extractor \
       && python3.10 -m pip install . \
       && cd / \
       && rm -rf /tmp/dbt-extractor
-RUN . $HOME/.cargo/env && python3.10 -m pip install "git+https://github.com/dbt-labs/dbt-core@v${DBT_VERSION}#egg=dbt-core&subdirectory=core" --no-cache-dir
-RUN . $HOME/.cargo/env && python3.10 -m pip install "git+https://github.com/dbt-labs/dbt-core@v${DBT_VERSION}#egg=dbt-postgres&subdirectory=plugins/postgres" --no-cache-dir
-RUN . $HOME/.cargo/env && python3.10 -m pip install "git+https://github.com/dbt-labs/dbt-redshift@v${DBT_VERSION}#egg=dbt-redshift" --no-cache-dir
-RUN . $HOME/.cargo/env && python3.10 -m pip install "git+https://github.com/dbt-labs/dbt-bigquery@v${DBT_VERSION}#egg=dbt-bigquery" --no-cache-dir
-RUN . $HOME/.cargo/env && python3.10 -m pip install "git+https://github.com/dbt-labs/dbt-snowflake@v${DBT_VERSION}#egg=dbt-snowflake" --no-cache-dir
-RUN . $HOME/.cargo/env && python3.10 -m pip install markupsafe==2.0.1 pytz
+RUN . $HOME/.cargo/env && python3.10 -m pip install dbt-core --no-cache-dir
+RUN . $HOME/.cargo/env && python3.10 -m pip install dbt-postgres --no-cache-dir
+RUN . $HOME/.cargo/env && python3.10 -m pip install dbt-redshift --no-cache-dir
+RUN . $HOME/.cargo/env && python3.10 -m pip install dbt-bigquery --no-cache-dir
+RUN . $HOME/.cargo/env && python3.10 -m pip install dbt-snowflake --no-cache-dir
 
 FROM python:3.10-bookworm as final
 COPY --from=base /usr/local/lib/python3.10 /usr/local/lib/python3.10
